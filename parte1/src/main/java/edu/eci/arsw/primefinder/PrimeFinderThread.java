@@ -9,6 +9,8 @@ public class PrimeFinderThread extends Thread{
 	int a,b;
 	
 	private List<Integer> primes=new LinkedList<Integer>();
+
+	private static long finish = (System.nanoTime() / 1000000000) + 5;
 	
 	public PrimeFinderThread(int a, int b) {
 		super();
@@ -17,14 +19,14 @@ public class PrimeFinderThread extends Thread{
 	}
 
 	public void run(){
-		for (int i=a;i<=b;i++){						
-			if (isPrime(i)){
-				primes.add(i);
-				System.out.println(i);
+		while (System.nanoTime() / 1000000000 < finish) {
+			for (int i=a;i<=b;i++){
+				if (isPrime(i)){
+					primes.add(i);
+				}
 			}
 		}
-		
-		
+		System.out.println(primes);
 	}
 	
 	boolean isPrime(int n) {
