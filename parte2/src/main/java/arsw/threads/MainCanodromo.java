@@ -21,7 +21,6 @@ public class MainCanodromo {
         //Acción del botón start
         can.setStartAction(
                 new ActionListener() {
-
                     @Override
                     public void actionPerformed(final ActionEvent e) {
 						//como acción, se crea un nuevo hilo que cree los hilos
@@ -36,22 +35,31 @@ public class MainCanodromo {
                                     galgos[i] = new Galgo(can.getCarril(i), "" + i, reg);
                                     //inicia los hilos
                                     galgos[i].start();
-
                                 }
-                               
-				can.winnerDialog(reg.getGanador(),reg.getUltimaPosicionAlcanzada() - 1); 
+                                for (Galgo g: galgos){
+                                    try {
+                                        g.join();
+                                    } catch (InterruptedException ex) {
+                                        throw new RuntimeException(ex);
+                                    }
+                                }
+                                can.winnerDialog(reg.getGanador(),reg.getUltimaPosicionAlcanzada() - 1);
                                 System.out.println("El ganador fue:" + reg.getGanador());
                             }
                         }.start();
 
                     }
                 }
+
         );
 
         can.setStopAction(
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        for(Galgo g: galgos){
+                            g.eperate();
+                        }
                         System.out.println("Carrera pausada!");
                     }
                 }
@@ -61,10 +69,15 @@ public class MainCanodromo {
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        for(Galgo g: galgos){
+                            g.desEperate();
+                        }
                         System.out.println("Carrera reanudada!");
                     }
                 }
         );
+
+
 
     }
 
